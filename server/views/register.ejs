@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register form</title>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="./animationcss.css" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+    <style>
+        *{
+            font-family: sans-serif;
+        }
+
+        body {
+            background-color: #f7f6e7;
+        }
+        .btn, .myBtn{
+            color:#ffffff;
+            border-radius:20px;
+            background-color:#f2a154;
+            margin: 15px 15px 15px 0px;
+            border: 0px;
+          }
+        /* footer start*/
+        footer {
+            padding: 10px 30px;
+            background-color:#f2a154;
+
+          }
+        .btnStyle {
+            border-radius: 30px ;
+          }
+        /* footer ended*/
+        
+        /* Navbar css start*/
+        #brandlogo{
+            font-family: Cooper;
+            color: white;
+        }
+        .navbar{
+            background-color: #314e52;
+        }
+        .navbar-light .navbar-nav .nav-link {
+            color: white;
+        }
+        #brandlogo:hover{
+            color: #f2a154;
+        }
+        .navbar-light .navbar-nav .nav-link:hover{
+            color: #f2a154;
+        }
+        .navbar-light .navbar-nav .nav-link:focus{
+            color: white;
+        }
+        .dropdown-item:focus, .dropdown-item:hover {
+            color: white;
+            background-color: #f2a154;
+        }
+         /* Navbar css ended*/
+        .form-row{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+        .card{
+            border-radius: 20px;
+        }
+        .card-header{
+            border-bottom: none;
+            background-color: rgba(0,0,0,0);
+
+        }
+        
+        .card-footer{
+            border-top: none;
+            background-color: rgba(0,0,0,0);
+        }
+        .btn-success:hover {
+            color: #fff;
+            background-color: #314e52;
+            border-color: #314e52;
+        }
+        .form-row{
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAV BAR -->
+    <nav id="Navbar"class="navbar navbar-expand-sm navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="home.html"> <h1 id="brandlogo">90's Taste</h1> </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mb-2 mb-lg-0 mt-1">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END NAV BAR -->
+    <!-- Register form -->
+    <div class="container-sm mx-auto mt-3" style="width:600px;">
+        <div class="card text-dark bg-light fadeInDown" >
+            <form action="/postregister" method="post" >
+                <div class="card-header text-center mt-2 fadeIn first">
+                    <h1 style="font-family: Cooper;">Register form</h1>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col-md-6 fadeIn second">
+                            <label class="form-label">First name</label>
+                            <input name ="ufname" type="text" class="form-control" placeholder="First name"  pattern="[A-Za-z]{*}" required>
+                        </div>
+                        <div class="form-group col-md-6 fadeIn second">
+                            <label class="form-label">Last name</label>
+                            <input name = "ulname" type="text" class="form-control" placeholder="Last name"  required>
+                        </div>
+                    </div>
+                    <div class="form-row ">
+                        <div class="form-group col-md-3 ">
+                            <label class="form-label">Age</label>
+                            <input name = "age" type="text" class="form-control" placeholder="age" pattern="[0-9]{,}" required>
+                        </div>
+                        <div class="form-group col-md-1 "><p></p></div>
+                        <div class="form-group col-md-8 ">
+                            <label class="form-label">Email</label>
+                            <input name="email"type="email" class="form-control" placeholder="example@email.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group fadeIn third">
+                        <label class="form-label">Address</label>
+                        <textarea name="address" class="form-control" placeholder="Address" id="floatingTextarea"></textarea>
+                      </div>
+                    <div class="form-group fadeIn third">
+                        <div class="col text-left mt-3">
+                            <label class="form-label">Username</label>
+                            <input name = "username" type="text" class="form-control" placeholder="username"  required>
+                        </div>
+                        <div class="col text-left mt-3 fadeIn fourth">
+                            <label class="form-label">Password</label>
+                            <input name = "password" type="password" class="form-control" placeholder="password" pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$" title="At least 8 characters, at least one letter and one number" required >
+                        </div>  
+                    </div>                    
+                </div>
+                <div class = "d-flex justify-content-between fadeIn fifth" id="smm" style="margin: 20px 20px 20px 20px;">
+                    <div class="mx-2 ms-auto">
+                        <a href="/login" class="card-link underlineHover">Already have an account?</a>
+                    </div>
+                    
+                </div> 
+                <% if (data.err == true) { %>
+                    <div class="alert alert-danger" role="alert"><%- data.msg %></div>
+                <% } %>  
+                <div class="card-footer text-center fadeIn sex">
+                    <button type="submit" class="btn btn-success bt" style="width: 100%; ">Submit</button> 
+                </div>
+            </form>
+        </div>
+    </div>    
+    <!-- FOOTER -->
+    <footer id="footer" style="margin-top: 5%;">
+    
+        <div class="large-6 medium-6 columns">
+            <div class="container">
+            <p><strong>Group 3</strong></p>
+            <p><span>Copyright © 2021 Group3.co.</span> <span>All Rights Reserved.</span>
+            </div>
+        </div>
+    </footer>
+    <!-- FOOTER ENDED -->   
+
+</body>
+<script>
+    function submit(){
+        console.log("HI");
+    }
+</script>
+</html>

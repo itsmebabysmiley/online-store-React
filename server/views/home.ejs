@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>90's Taste</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <!-- axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- update -->
+    <style>
+        body{
+          background-color:#f7f6e7;
+        }
+        h1 {
+          font-family:Cooper;
+        }
+        a {
+          font-family: sans-serif;
+        }
+        p {
+          color:#000000 ;
+        }
+        footer {
+          padding: 30px;
+          background-color:#f2a154;
+        }
+        button {
+            border: 0px;
+        }
+        /* a:active {
+          color:#ffffff;
+        } */
+        button:hover {
+          color:#f2a154;
+        }
+        .btnStyle {
+          border-radius: 30px ;
+        }
+        .dropdown-item:active {
+          background-color:#f2a154;
+        }
+        .btn, .myBtn{
+          color:#ffffff;
+          border-radius:20px;
+          background-color:#f2a154;
+          margin: 15px 15px 15px 0px;
+          border: 0px;
+        }
+        .btn:hover{
+          background-color:#314e52;
+        }
+
+        #brandlogo{
+            font-family: Cooper;
+            color: white;
+            margin:0px 15px 0px 0px;
+        }
+        .navbar{
+            background-color: #314e52;
+            margin: 0px 0px 0px 0px;
+        }
+        .navbar-light .navbar-nav .nav-link {
+            color: white;
+        }
+        #brandlogo:hover{
+            color: #f2a154;
+        }
+        .navbar-light .navbar-nav .nav-link:hover{
+            color: #f2a154;
+        }
+        .navbar-light .navbar-nav .nav-link:focus{
+            color: white;
+        }
+        .btn-check:focus+.btn, .btn:focus,.btn-check:focus+.btn-primary, .btn-primary:focus, .btn-primary:active:focus, .btn-primary:active{
+          color: #fff;
+          box-shadow: 0 0 0 0.25rem rgb(49 78 82 / 25%);
+          background-color: #314e52;
+          border-color: #314e52;
+        }
+
+
+    </style>
+    
+  </head>
+  <body>
+      <!-- NAV BAR -->
+    <nav class="navbar navbar-expand-sm navbar-light fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="/"> <h1 id="brandlogo">90's Taste</h1> </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="/aboutus">About us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/search">Search</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Products
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li>
+                    <a class="dropdown-item" href="http://localhost:3001/searchinfo/none/none/'cassette'">Cassette tape</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="http://localhost:3001/searchinfo/none/none/'vinyl'">Vinyl</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="http://localhost:3001/searchinfo/none/none/'film'">Films</a>
+                  </li>
+                    </ul>
+              </li>
+              <% if (data.loginStatus == false) { %>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Login
+                </a>
+                
+                <ul class="dropdown-menu"
+                        aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item"
+                                href="/login">Login</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                                href="/register">Sign up</a>
+                        </li>
+                </ul>
+                
+              </li>
+              <% } %>
+            </ul>
+            <% if (data.loginStatus == true) { %>
+              <div class="collapse navbar-collapse" >
+                <ul class="navbar-nav mb-2 mb-lg-0 mt-1 ms-auto">
+                    <li class="nav-item" >
+                        <a href="/profile">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi bi-basket" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                        </svg>
+                        </a>
+                    </li>
+                </ul>
+                </div>
+              <% } %>  
+          </div>
+        </div>
+    </nav>
+    <!-- END NAV BAR -->
+    <!-- BANNER -->
+      <!-- BANNER SLIDE -->
+      <div id="carouselExampleDark" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          <!-- <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" aria-label="Slide 4"></button> -->
+        </div>
+          <!-- BANNER 1 -->
+          <div class="carousel-inner" style="margin-top: 60px">
+            <div class="carousel-item active" data-bs-interval="10000">
+              <img src="https://github.com/itsmebabysmiley/Online-shopping/blob/main/image/Banner1.png?raw=true" class="d-block w-100" alt="...">
+              <div class="carousel-caption d-none d-md-block">
+                  <!-- <h5>Insert banner1</h5> -->
+                  <a href="/search" class="btn" style="color: white;">looking for?</a>
+              </div>
+            </div>
+          </div>  
+          <!-- BANNER 2 -->
+          <div class="carousel-item" data-bs-interval="2000">
+            <img src="https://github.com/itsmebabysmiley/Online-shopping/blob/main/image/Banner2.png?raw=true" class="d-block w-100" >
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Kodak Ultramax ISO400</h5>
+                <a href="http://localhost:3001/searchinfo/kodak/none/'film'" class="btn" style="color: white;">try it</a>
+            </div>
+          </div>
+          <!-- BANNER 3 -->
+          <div class="carousel-item">
+            <img src="https://github.com/itsmebabysmiley/Online-shopping/blob/main/image/Banner3.png?raw=true" class="d-block w-100" >
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Kodak Ultramax ISO400</h5>
+                <a href="http://localhost:3001/searchinfo/kodak/none/'film'" class="btn" style="color: white;">try it</a>
+            </div>
+          </div>
+          <!-- BANNER 4
+          <div class="carousel-item">
+            <img src="https://api.time.com/wp-content/uploads/2015/12/the-beatles2.jpg"   height="510px"class="d-block w-100" >
+            <div class="carousel-caption d-none d-md-block">
+                <h5>The Beatles</h5>
+                <a href="/search" class="btn" style="color: white;">try it</a>
+            </div>
+          </div>
+        </div> -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark"  data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark"  data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+        <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+  <!-- CARD -->
+  <div class="card-group">
+    <div class="card" >
+      <img src="https://github.com/itsmebabysmiley/Online-shopping/blob/main/image/products/CassetteTape.png?raw=true" class="card-img-top">
+      <div class="card-body">
+        <h5 class="card-title">Cassette tape</h5>
+        <a href="http://localhost:3001/searchinfo/none/none/'cassette'" class="btn btn-primary" >Taste it</a>
+      </div>
+    </div>
+    <div class="card" >
+      <img src="https://github.com/itsmebabysmiley/Online-shopping/blob/main/image/products/Vinyl.png?raw=true" class="card-img-top" >
+      <div class="card-body">
+        <h5 class="card-title">Vinyl</h5>
+        <a href="http://localhost:3001/searchinfo/none/none/'vinyl'" class="btn btn-primary" >Taste it</a>
+      </div>
+    </div>
+    <div class="card" >
+      <img src="https://github.com/itsmebabysmiley/Online-shopping/blob/main/image/products/Films.png?raw=true" class="card-img-top">
+      <div class="card-body">
+        <h5 class="card-title">Films</h5>
+        <a href="http://localhost:3001/searchinfo/none/none/'film'" class="btn btn-primary" >Taste it</a>
+      </div>
+    </div>
+  </div>
+<div class="container me-auto">
+  <div class="row">
+    <div class="col-4">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h3 class="card-title">Search lyrics</h3>
+          <div class="mb-3">
+            <label for="artist" class="form-label">Artist</label>
+            <input name="artist" type="text" class="form-control" id="artist" placeholder="Queen" required>
+          </div>
+          <div class="mb-3">
+            <label for="songtitle" class="form-label">Title</label>
+            <input name="songtitle"type="email" class="form-control" id="songtitle" placeholder="Bohemian Rhapsody" required>
+          </div>
+          <a  class="btn" style="color: white;" onclick="searchlyrics()">search</a>
+        </div>
+      </div>
+      
+    </div>
+    <div class="col-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title" id="band"></h5>
+          <hr />
+          <p class="card-text" id="lyrics"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  <footer id="footer">
+    
+    <div class="large-6 medium-6 columns">
+      <div class="container">
+        <p><strong>Group 3</strong></p>
+        <a href="#carouselExampleDark" class="btn btn-primary"style="background-color:#314e52;" > top</a>
+        <p><span>Copyright © 2021 Group3.co.</span> <span>All Rights Reserved.</span></p>
+      </div>
+    </div>
+  </footer>
+
+</body>
+<script type="text/javascript">
+   async function searchlyrics(){
+     var artist = document.getElementById("artist").value;
+     var title = document.getElementById("songtitle").value;
+     console.log(artist,title)
+     axios.get(`https://api.lyrics.ovh/v1/${artist}/${title}`).then(data =>{
+       //console.log(data.data.lyrics);
+       var lyrics = data.data.lyrics;
+        document.getElementById('band').innerHTML = artist;
+        document.getElementById('lyrics').innerText = lyrics;
+     })
+     .catch(err =>{
+       console.log(err)
+       document.getElementById('band').innerHTML = 'NOT FOUND';
+     })
+   }
+
+</script>
+</html>
