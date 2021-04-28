@@ -38,6 +38,7 @@ router.get("/profile", authchecker, (req, res, next) => {
 
 router.get("/getloginstatus", (req, res, next) => {
   console.log("request login status");
+  // console.log(req.get("Cookie"));
   try {
     const token = req.get("Cookie").split("token=")[1].trim();
     const user = jwt.verify(token, "SECRETKEY");
@@ -76,7 +77,7 @@ router.get("/login", (req, res) => {
 router.post("/postlogin", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
-  console.log(username,password);
+  // console.log(username,password);
   if(!username || !password) {
       return res.send({data : {err : true, msg : "Invalid username or password"}});
     // return res.render("login", {data : {err : true, msg : "Invalid username or password"}})
@@ -107,7 +108,7 @@ router.post("/postlogin", (req, res) => {
             // console.log("correct user password")
             res.setHeader("Set-Cookie", "token=" + token);
             return res.send({
-              data: { err: false, msg: "correct username and password", token: token, role : role },
+              data: { err: false, msg: "correct username and password", token: token, role: role },
             })
             // res.redirect("profile");
           } else {
@@ -122,10 +123,112 @@ router.post("/postlogin", (req, res) => {
     }
   );
 });
+//for ejs lazy to change the structure of the ejs.files
+router.post("/postlogin2", (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  // console.log(username,password);
+  if(!username || !password) {
+      // return res.send({data : {err : true, msg : "Invalid username or password"}});
+    return res.render("login", {data : {err : true, msg : "Invalid username or password"}})
+  }
+  dbconnect.query(
+    "SELECT password,role FROM user WHERE username = ?",
+    username,
+    (error, result) => {
+      if (error) throw error;
+      // console.log(result);
+      if (result.length == 0) {
+        console.log("no user in database");
+        // return res.send({
+        //   data: { err: true, msg: "username does not exit" },
+        // });
+        return res.render("login", {
+          data: { err: true, msg: "username does not exit" },
+        });
+      } else {
+        const role = result[0].role;
+        bcrypt.compare(password, result[0].password).then((result) => {
+          if (result) {
+            const token = jwt.sign(
+              { username: username, loginStatus: true, role : role },
+              "SECRETKEY",
+              { expiresIn: 60 * 1 }
+            );
+            // console.log("correct user password")
+            res.setHeader("Set-Cookie", "token=" + token);
+            // return res.send({
+            //   data: { err: false, msg: "correct username and password", token: token },
+            // })
+            res.redirect("profile");
+          } else {
+            console.log("wrong password");
+            // return res.send({data: { err: true, msg: "Password was not correct" }});
+            res.render("login", {
+              data: { err: true, msg: "Password was not correct" },
+            });
+          }
+        });
+      }
+    }
+  );
+});
 router.get("/register", (req, res) => {
   res.render("register", { data: { err: false, msg: "" } });
 });
 router.post("/postregister", (req, res) => {
+  console.log(req.body);
+  const hash = bcrypt.hashSync(req.body.password, 12);
+  let new_user = {
+    ufname: req.body.ufname,
+    ulname: req.body.ulname,
+    username: req.body.username,
+    password: hash,
+    email: req.body.email,
+    age: req.body.age,
+    address: req.body.address,
+    role: "user",
+  };
+  dbconnect.query("INSERT INTO user SET ?", new_user, (error, result) => {
+    if (error) {
+      if (error.errno == 1062) {
+        // return res.render("register", {
+        //   data: {
+        //     err: true,
+        //     msg: "This user name already used.",
+        //   },
+        // });
+        return res.send({
+          data: {
+            err: true,
+            msg: "This user name already used.",
+          },
+        });
+      }
+    } else {
+      const token = jwt.sign(
+        { username: new_user.username, loginStatus: true, role : new_user.role },
+        "SECRETKEY",
+        { expiresIn: 60 * 1 }
+      );
+      res.setHeader("Set-Cookie", "token=" + token);
+      return res.send({
+        data: {
+          err: true,
+          msg: "now you can visit <a href='/profile'>profile page</a>.",
+        },
+      });
+      // return res.render("register", {
+      //   data: {
+      //     err: true,
+      //     msg: "now you can visit <a href='/profile'>profile page</a>.",
+      //   },
+      // });
+    }
+  });
+});
+//for ejs
+router.post("/postregister2", (req, res) => {
   console.log(req.body);
   const hash = bcrypt.hashSync(req.body.password, 12);
   let new_user = {
@@ -170,10 +273,12 @@ router.get("/logout", (req, res) => {
 });
 
 router.get("/stock",adminAuthChecker, (req, res)=>{
-  return res.send({msg: 'Do I have to do stock page on phase2?'})
+  return res.redirect('http://localhost:3000/stock');
+  // return res.send({msg: 'Do I have to do stock page on phase2?'})
 });
 router.get("/usermanage",adminAuthChecker, (req, res)=>{
-  return res.send({msg: 'Do I have to do user manage page on phase2?'})
+  return res.redirect('http://localhost:3000/usermanage');
+  // return res.send({msg: 'Do I have to do user manage page on phase2?'})
 });
 
 router.get("/search", (req, res) => {
@@ -246,6 +351,37 @@ router.get("/results/:name/:sortByPrice/:type",(req,res)=>{
   );
 });
 /**
+ * search by Id product
+ */
+router.get("/results/:id",(req,res)=>{
+  var pid = req.params.id
+  var sql = `SELECT * FROM shop_db.product WHERE pId = ${pid}`; 
+  console.log(sql);
+  dbconnect.query(sql, (error, results, fields) => {
+      if (error) {
+        res.send({
+          data: {
+            err: true,
+            msg: "Error occur",
+          },
+        });
+        throw error;
+      }
+      else{
+        console.log(results.length + " rows returned");
+        // allow cors
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+        return res.send({
+          err: false,
+          msg: `lists[${results.length} rows].`,
+          data: results,
+        });
+      }
+      
+    }
+  );
+});
+/**
  * TEST CASE for INSERT PRODUCT
  * METHOD POST
  * url : localhost:3001/insertproducts
@@ -266,23 +402,22 @@ router.get("/results/:name/:sortByPrice/:type",(req,res)=>{
   }
  */ 
   router.post("/insertproducts", (req, res) => {
-    //console.log(req.body);
+    console.log(req.body);
     var products = req.body;
     if(!products.pName, !products.price, !products.type){
       return res.send({
-        data: {
           err: true,
           msg: "Please insert all name, price ,and type"
-        }});
+        });
     }
     dbconnect.query(
       "INSERT INTO shop_db.product SET ?",
       products,
       (error, results, fields) => {
         if (error) {
-          return res.send({ data: { err: true, msg: "Error occur" } });
+          return res.send({err: true, msg: "Error occur" } );
         }
-        return res.send({ data: { err: false, msg: `product ${products.pName} has been added`} });
+        return res.send({ err: false, msg: `product ${products.pName} has been added`});
       }
     );
   });
@@ -306,9 +441,9 @@ router.delete("/deleteproducts", (req, res) => {
     [pId],
     (error, results) => {
       if (error) {
-        return res.send({ data: { err: true, msg: "Error occur" } });
+        return res.send({ err: true, msg: "Error occur" } );
       }
-      return res.send({ data: { err: false, msg: `product ${pId} has been deleted`} });
+      return res.send({ err: false, msg: `product ${pId} has been deleted`});
     }
   );
 });
@@ -335,9 +470,9 @@ router.put("/updateproducts", (req, res) => {
     (error, results) => {
       console.log(results);
       if (error) {
-        return res.send({ data: { err: true, msg: "Error occur" } });
+        return res.send({ err: true, msg: "Error occur" } );
       }
-      return res.send({ data: { err: false, msg: `product ${pId} has been updated`} });
+      return res.send({ err: false, msg: `product ${pId} has been updated`});
     }
   );
 });
@@ -529,13 +664,13 @@ router.delete("/deleteuser",(req,res)=>{
     username,
     (error, results) => {
       if (error) {
-        return res.send({ data: { err: true, msg: "Error occur" } });
+        return res.send({ err: true, msg: "Error occur" } );
       }
       if(results.affectedRows == 0){
 
-        return res.send({ data: { err: true, msg: `No username ${username} in database `} });
+        return res.send({ err: true, msg: `No username ${username} in database `} );
       }
-      return res.send({ data: { err: false, msg: `username ${username} has been deleted`} });
+      return res.send({ err: false, msg: `username ${username} has been deleted`} );
     }
   );
 })

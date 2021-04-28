@@ -1,10 +1,7 @@
 import React from "react";
-import {Link} from 'react-router-dom';
 import Axios from "axios";
 import { useState } from "react";
-import { Route } from "react-router-dom";
 import { Redirect } from "react-router-dom";
-import Userm from './Userman';
 const LoginAdmin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -67,7 +64,8 @@ const LoginAdmin = () => {
       <hr />
       <div className="resultslogin">
         <p>{message}</p>
-        {(status === false) ? <Redirect to={"/usermanage"} /> : <p></p>}
+        {(status === false) ? 
+          <Redirect to={'/usermanage'}/>: <p></p>}
       </div>
     </div>
   );

@@ -1,0 +1,10 @@
+- - - termainal# 1 (React server port 3000)- - - 
+ - cd client
+ - npm i
+npm start 
+- - - - - - - - - - - - - - - -
+- - - terminal# 2 (Idiot sever port 3001) - - - 
+- cd server
+ - npm i
+npm run dev
+
