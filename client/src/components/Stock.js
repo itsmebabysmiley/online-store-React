@@ -1,7 +1,8 @@
 import React from 'react'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Axios from 'axios'
 import Navbar from './Navbar'
+import { Redirect } from "react-router-dom";
 function Stock() {
     const [search, setSearch] = useState('');
     const [sortPrice, setSortPrice] = useState('none');
@@ -13,14 +14,34 @@ function Stock() {
     const [Image, setImage] = useState('');
     const [type, setType] = useState('none');
     const [productList ,setProductList] = useState([])
-    const [newPrice, setNewPrice] = useState(0)
+    const [statusLogin, setstatusLogin] = useState(false);
+    const [searchstatus, setSearchstatus] = useState(false);
+    //authorized user is login or not.
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        // console.log(token);
+        Axios.post("http://localhost:3001/isUserAuth",{token : token}).then((res) => {
+        //   console.log(res.data.status);
+          if(res.data.status === false){
+            localStorage.removeItem('token');
+            setstatusLogin(true)
+          }  
+        });
+      });
+      //not login then redirect to login page.
+      if(statusLogin){
+          return <Redirect to={'/'}/>
+      }
+
     const searchallproduct = () =>{
         var type = (searchType === 'none')? 'none': "'"+searchType+"'"
-        if(searchType)
-        Axios.get(`http://localhost:3001/results/none/${sortPrice}/${type}`).then(res=>{
-            console.log(res.data.data);
-            setProductList(res.data.data)
-        })
+        if(searchType){
+            var temp = `http://localhost:3001/results/none/${sortPrice}/${type}`
+            localStorage.setItem("productAPI",temp)
+            setSearchstatus(true);
+            
+        }
+        
     }
     const searchproduct = () =>{
         var searchname = search.trim();
@@ -31,7 +52,7 @@ function Stock() {
         if(searchid === ''){
             searchid = 'none'
         }
-        console.log(searchname,searchid,sortPrice,searchType);
+        // console.log(searchname,searchid,sortPrice,searchType);
         if(searchname !== 'none' && searchid != 'none'){
             return alert('Enter Id or name (Not Both!)')
         }
@@ -39,20 +60,23 @@ function Stock() {
             searchallproduct();
         }
         else if(searchid != 'none'){
-            console.log(searchid);
-            Axios.get(`http://localhost:3001/results/${searchid}`).then(res=>{
-            console.log(res.data.data);
-            setProductList(res.data.data)
-            })
+            // console.log(searchid);
+            var temp = `http://localhost:3001/results/${searchid}`
+            localStorage.setItem("productAPI",temp);
+            setSearchstatus(true);
+
         }else if(searchname != 'none'){
             var type = (searchType === 'none')? 'none': "'"+searchType+"'"
-            Axios.get(`http://localhost:3001/results/${searchname}/${sortPrice}/${type}`).then(res=>{
-                console.log(res.data.data);
-                setProductList(res.data.data)
-            })
+            var temp = `http://localhost:3001/results/${searchname}/${sortPrice}/${type}`
+            setSearchstatus(true);
+            localStorage.setItem("productAPI",temp)
+
         }
         
-        
+    }
+    //if user click, search or searchall it will redirect to stock results page.
+    if(searchstatus){
+        return <Redirect to={'/productresults'}/>
     }
     const insertProduct = () =>{
         let product_info = {
@@ -62,9 +86,9 @@ function Stock() {
             Image : Image,
             type : type
         }
-        console.log(product_info)
+        // console.log(product_info)
         Axios.post("http://localhost:3001/insertproducts",product_info).then(res =>{
-            console.log(res.data.msg);
+            // console.log(res.data.msg);   
             alert(res.data.msg);
             setProductList([...productList,{
                 pName : pName,
@@ -75,35 +99,6 @@ function Stock() {
             }])
         })
     }
-    const updateProduct = (id) =>{
-        // console.log(newPrice,id);
-        Axios.put("http://localhost:3001/updateproducts",{pId : id, price: newPrice}).then(res=>{
-            console.log(res.data)
-            setProductList(productList.map((val,key)=>{
-                return (val.pId == id? {
-                    pId : val.pId,
-                    pName : val.pName,
-                    price : newPrice,
-                    detail : val.detail,
-                    Image : val.Image,
-                    type : val.type
-                } : val)
-            }))
-        })
-        
-
-    }
-    const deleteProduct = (id)=>{
-        console.log(id)
-        Axios.delete("http://localhost:3001/deleteproducts",{data: {pId: id}}).then(res =>{
-            console.log(res.data.msg)
-            alert(res.data.msg)
-            setProductList(productList.filter((val)=>{
-                return (val.pId != id);
-            }))
-        })
-
-    }
 
     const result = ()=>{
         return(
@@ -112,7 +107,7 @@ function Stock() {
                     return(
                         <div>
                             <div style={{border:"1px solid", margin:"10px", padding:"10px"}}>
-                            <h3>ID: {val.pId}</h3>
+                            {/* <h3>ID: {val.pId}</h3> */}
                             <p>Name: {val.pName}</p>
                             <p>Price: {val.price}</p>
                             <p>detail: {val.detail}</p>
@@ -121,9 +116,9 @@ function Stock() {
                             <div className="container">
                                 <img src={val.Image} alt="..." width="150px" height="150px"></img>
                             </div>
-                            <button onClick={()=>{deleteProduct(val.pId)}}>Delete</button><br/>
+                            {/* <button onClick={()=>{deleteProduct(val.pId)}}>Delete</button><br/>
                             <input type="number" placeholder=".... Baht" onChange={(e)=>{setNewPrice(e.target.value)}}/>
-                            <button onClick={()=>{updateProduct(val.pId)}}>update</button>
+                            <button onClick={()=>{updateProduct(val.pId)}}>update</button> */}
                         </div>
                         </div>
                     )
@@ -136,7 +131,6 @@ function Stock() {
         <div>
             <Navbar/>
             <div className="container">
-
                 <h1 style={{textAlign: "center"}}>Stock page</h1>
                 <div>
                     <h1>Insert new product</h1>

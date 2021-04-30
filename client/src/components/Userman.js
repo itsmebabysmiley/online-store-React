@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Axios from "axios";
 import "../App.css";
+import { Redirect } from "react-router-dom";
 import Navbar from "./Navbar";
 function Userman() {
   const [ufname, setufname] = useState("");
@@ -14,28 +15,37 @@ function Userman() {
   const [role, setrole] = useState("user");
   const [newRole, setnewRole] = useState("");
   const [userList, setuserList] = useState([]);
-//   const [statusLogin, setstatusLogin] = useState(false);
-//   useEffect(() => {
-//     Axios.get("http://localhost:3001/getloginstatus").then((res) => {
-//       console.log(res.data);
-//       if (res.data.data.err) {
-//         console.log("ook");
-//         setstatusLogin(true);
-//       }
-//     });
-//   });
-  // if(statusLogin){
-  //     return <Loginpage />
-  // }
+  const [statusLogin, setstatusLogin] = useState(false);
+  const [searchstatus, setSearchstatus] = useState(false);
+  //authorized user is login or not.
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    // console.log(token);
+    Axios.post("http://localhost:3001/isUserAuth",{token : token}).then((res) => {
+      // console.log(res.data.status);
+      if(res.data.status === false){
+        localStorage.removeItem('token');
+        setstatusLogin(true)
+      }
+      
+    });
+  });
+  //not login then redirect to login page.
+  if(statusLogin){
+      return <Redirect to={'/'}/>
+  }
 
   const clear = () => {
     setuserList([]);
   };
   const getUser = () => {
-    Axios.get("http://localhost:3001/searchuserall").then((res) => {
-      console.log(res.data.data);
-      setuserList(res.data.data);
-    });
+    var temp = "http://localhost:3001/searchuserall";
+    localStorage.setItem("userAPI",temp);
+    setSearchstatus(true);
+    // Axios.get("http://localhost:3001/searchuserall").then((res) => {
+    //   // console.log(res.data.data);
+    //   setuserList(res.data.data);
+    // });
   };
   const getuserbyusername = (type) => {
     let option = "";
@@ -57,13 +67,19 @@ function Userman() {
         break;
     }
     console.log(search);
-    Axios.get(`http://localhost:3001/searchuser/${search}/${option}`).then(
-      (res) => {
-        console.log(res.data.data);
-        setuserList(res.data.data);
-      }
-    );
+    var temp = `http://localhost:3001/searchuser/${search}/${option}`;
+    localStorage.setItem("userAPI",temp);
+    setSearchstatus(true);
+    // Axios.get(`http://localhost:3001/searchuser/${search}/${option}`).then(
+    //   (res) => {
+    //     // console.log(res.data.data);
+    //     setuserList(res.data.data);
+    //   }
+    // );
   };
+  if(searchstatus){
+    return <Redirect to={'/userresults'}/>
+  }
   const addNewUser = () => {
     let user_info = {
       ufname: ufname,
@@ -89,46 +105,6 @@ function Userman() {
       }]);
     });
   };
-  const updateRole = (uname) => {
-    console.log(uname, newRole);
-    Axios.put("http://localhost:3001/updateuser", {
-      username: uname,
-      role: newRole,
-    }).then((res) => {
-      console.log(res.data.msg);
-      alert(res.data.msg)
-      setuserList(
-        userList.map((val, key) => {
-          return val.username == uname
-            ? {
-                ufname: val.ufname,
-                ulname: val.ulname,
-                username: val.username,
-                password: val.password,
-                email: val.email,
-                address: val.address,
-                age: val.age,
-                role: newRole,
-              }
-            : val;
-        })
-      );
-    });
-  };
-  const deleteUser = (username) => {
-    console.log(username);
-    Axios.delete("http://localhost:3001/deleteuser", {
-      data: { username: username },
-    }).then((res) => {
-      console.log("ok");
-      alert(res.data.msg)
-      setuserList(
-        userList.filter((val) => {
-          return val.username != username;
-        })
-      );
-    });
-  };
 
   const results = () => {
     return (
@@ -146,30 +122,7 @@ function Userman() {
                 <p>age: {val.age}</p>
                 <p>address: {val.address}</p>
                 <p>role: {val.role}</p>
-                <select
-                  onChange={(e) => {
-                    setnewRole(e.target.value);
-                  }}
-                >
-                 <option value="" disabled selected>-- role --</option>
-                  <option value="admin">admin</option>
-                  <option value="user">user</option>
-                </select>
-                <button
-                  onClick={() => {
-                    updateRole(val.username);
-                  }}
-                >
-                  update
-                </button>
-                <br />
-                <button
-                  onClick={() => {
-                    deleteUser(val.username);
-                  }}
-                >
-                  delete
-                </button>
+                
               </div>
             </div>
           );

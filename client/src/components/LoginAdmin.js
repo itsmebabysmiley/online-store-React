@@ -17,12 +17,11 @@ const LoginAdmin = () => {
     console.log(user_info);
 
     Axios.post("http://localhost:3001/postlogin", user_info).then((res) => {
-      // console.log(res)
-      console.log(res.data.data.role);
-      // setStatus(res.data.data.err);
       setMessage(res.data.data.msg);
+      localStorage.removeItem("token");
       if(res.data.data.err == false && res.data.data.role == 'admin'){
         setStatus(res.data.data.err);
+        localStorage.setItem("token" , res.data.data.token);
       }else if(res.data.data.err == false && res.data.data.role == 'user'){
         setStatus(true);
         setMessage("You are not admin")

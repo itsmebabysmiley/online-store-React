@@ -5,7 +5,7 @@ const Navbar = () => {
       <div className="container">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <div className="container-fluid">
-          <Link className="navbar-brand" to="/">90's taste Admin</Link>
+          <Link className="navbar-brand" to="/home">90's taste Admin</Link>
             <button
               className="navbar-toggler"
               type="button"
@@ -27,6 +27,9 @@ const Navbar = () => {
                 </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/usermanage">user management</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/logout">Log out</Link>
                 </li>
               </ul>
             </div>
