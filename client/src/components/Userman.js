@@ -145,7 +145,7 @@ function Userman() {
               <div className="d-flex flex-column justify-content-start" >
                 <div className="d-flex ">
                   <label className="align-self-center">First name:&nbsp;</label>
-                  <input
+                  <input className="flex-fill"
                     type="text"
                     placeholder="Enter firstname"
                     onChange={(e) => {
@@ -155,7 +155,7 @@ function Userman() {
                 </div>
                 <div className="d-flex ">
                   <label className="align-self-center">Last name:&nbsp;</label>
-                  <input
+                  <input className="flex-fill"
                     type="text"
                     placeholder="Enter lastname"
                     onChange={(e) => {
@@ -165,7 +165,7 @@ function Userman() {
                 </div>
                 <div className="d-flex ">
                   <label className="align-self-center">Username:&nbsp;</label>
-                  <input
+                  <input className="flex-fill"
                     type="text"
                     placeholder="Enter username"
                     onChange={(e) => {
@@ -175,7 +175,7 @@ function Userman() {
                 </div>
                 <div className="d-flex ">
                   <label className="align-self-center">Password:&nbsp;</label>
-                  <input
+                  <input className="flex-fill"
                     type="password"
                     placeholder="Enter password"
                     onChange={(e) => {
@@ -185,7 +185,7 @@ function Userman() {
                 </div>
                 <div className="d-flex ">
                   <label className="align-self-center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;E-mail:&nbsp;</label>
-                  <input 
+                  <input className="flex-fill"
                   type="email"
                   placeholder="Enter email"
                   onChange={(e) => {
@@ -195,7 +195,7 @@ function Userman() {
                 </div>
                 <div className="d-flex ">
                   <label className="align-self-center">&nbsp;&nbsp;Address:&nbsp;</label>
-                  <textarea
+                  <textarea className="flex-fill"
                     type="address"
                     placeholder="Enter address"
                     onChange={(e) => {
@@ -205,7 +205,7 @@ function Userman() {
                 </div>
                 <div className="d-flex ">
                   <label className="align-self-center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Age:&nbsp;</label>
-                  <input
+                  <input className="flex-fill"
                   type="number"
                   placeholder="Enter age"
                   onChange={(e) => {
@@ -215,7 +215,7 @@ function Userman() {
                 </div>
                 <div className="d-flex ">
                   <label className="align-self-center" style={{marginLeft:"2rem"}}> Role:</label>
-                  <select
+                  <select className="flex-fill"
                     style={{
 
                       borderRadius : "30px",
@@ -261,7 +261,7 @@ function Userman() {
                       setusername(e.target.value);
                     }}
                   />
-                  <button className="btn mt-1"
+                  <button className="btn mt-1 flex-fill"
                     
                     onClick={() => {
                       getuserbyusername(1);
@@ -278,7 +278,7 @@ function Userman() {
                         setufname(e.target.value);
                       }}
                     />
-                    <button className="btn mt-1"
+                    <button className="btn mt-1 flex-fill"
                       onClick={() => {
                         getuserbyusername(2);
                       }}
@@ -294,9 +294,8 @@ function Userman() {
                         setemail(e.target.value);
                       }}
                     />
-                    <button className="btn mt-1"
+                    <button className="btn mt-1 flex-fill"
                     style={{
-                      
                     }}
                       onClick={() => {
                         getuserbyusername(3);
@@ -306,8 +305,8 @@ function Userman() {
                     </button>
                   </div>
                   <div className="d-flex mt-3">
-                    <div style={{width:"16rem"}}></div>
-                    <button className="btn "
+                    <div style={{width:"15rem"}}></div>
+                    <button className="btn flex-fill"
                       style={{backgroundColor:"#f2a154"}}
                       type="submit"
                       onClick={() => {
@@ -316,7 +315,7 @@ function Userman() {
                     >
                     get all user
                     </button>
-                    <button className="btn ms-2"
+                    {/* <button className="btn ms-2"
                       style={{backgroundColor:"#f2a154"}}
                       type="submit"
                       onClick={() => {
@@ -324,7 +323,7 @@ function Userman() {
                       }}
                     >
                       clear
-                    </button>{" "}
+                    </button>{" "} */}
                   </div>
                 </div>
                 <div className="col">

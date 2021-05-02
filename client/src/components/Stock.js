@@ -88,29 +88,37 @@ function Stock() {
       Image: Image,
       type: type,
     };
+    let error = false;
     await Axios.post("http://localhost:3001/insertproducts", product_info).then(
       (res) => {
         alert(res.data.msg);
+        if(res.data.err === true){
+          error = true;
+        }
         //show to update results.
-        
       }
     );
-    //leg of create table in database so I have to query all the product to get the pId again....
-    await Axios.get("http://localhost:3001/results/none/none/none").then(res=>{
-      let id = res.data.data[res.data.data.length-1].pId;
-      console.log(id);
-      setProductList([
-        ...productList,
-        {
-          pId : id,
-          pName: pName,
-          price: price,
-          detail: detail,
-          Image: Image,
-          type: type,
-        },
-      ]);
+    //if insert error do not thing.
+    if(error == false){
+      //leg of create table in database so I have to query all the product to get the pId again....
+      await Axios.get("http://localhost:3001/results/none/none/none").then(res=>{
+        let id = res.data.data[res.data.data.length-1].pId;
+        console.log(id);
+        setProductList([
+          ...productList,
+          {
+            pId : id,
+            pName: pName,
+            price: price,
+            detail: detail,
+            Image: Image,
+            type: type,
+          },
+        ]);
     })
+    }
+    
+    
     // console.log(data.data.data.length);
     
   };
@@ -193,7 +201,7 @@ function Stock() {
       <h1 className="headerr" style={{ textAlign: "center" }}>
         Stock page
       </h1>
-      <div className=" row d-flex flex-wrap" style={{ margin: "5rem" }}>
+      <div className=" row d-flex flex-md-wrap" style={{ margin: "5rem" }}>
         <div className="col-8 align-self-start">
           <div className="row">
             <div
@@ -370,7 +378,7 @@ function Stock() {
             </div>
           </div>
         </div>
-        <div className="col-4" style={{padding:"2rem"}}>{ result() }</div>
+        <div className="col-4" style={{padding:"2rem"}}>{  result()  }</div>
       </div>
       <div className="footer">
         {/* footer */}

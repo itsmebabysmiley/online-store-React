@@ -111,7 +111,7 @@ textarea {
   border-radius: 30px;
   padding: 10px 15px 10px 15px;
   margin: 5px;
-  width: 300px;
+  /* width: 300px; */
   border-width: 1px;
   border-color: #304e52;
 }
@@ -180,4 +180,13 @@ navlogout:hover {
 
 .btnusersearch {
   font-size: 12px;
+}
+
+.form-control:focus{
+  border-color: #304e52;
+  box-shadow: 0 0 0 0.25rem rgb(48 78 82 / 25%) ;
+}
+.input:focus-visible{
+  border-color: #304e52;
+  border-radius: 30px;
 }
