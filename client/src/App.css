@@ -1,3 +1,183 @@
 .searchuser {
   margin: 30px;
 }
+html,
+h1,
+h5,
+h3,
+h4,
+logoo {
+  font-family: "cooper" !important;
+  margin: 0;
+  font-family: cooper;
+}
+body {
+  background-color: #f7f6e7;
+}
+
+code {
+  font-family: sans-serif;
+}
+
+.btn {
+  background-color: #304e52;
+  color: white;
+  border-radius: 40px;
+}
+
+.btn:hover {
+  background-color: #f2a154;
+  color: white;
+}
+.btn:active {
+  background-color: #304e52;
+  color: white;
+  stroke: #f2a154;
+}
+
+.mini {
+  /* minicard at the homePage */
+  border-radius: 20px;
+  width: 370px;
+  height: 200px;
+  margin: 10px;
+  padding: 10px;
+  /* background-image: linear-gradient(to bottom right, #f2a154,black); */
+}
+
+.headerr {
+  margin: 0px;
+  background-color: #304e52;
+  color: white;
+  padding: 40px;
+}
+
+.footer {
+  padding: 30px;
+  background-color: #f2a154;
+  color: black;
+  /* position: fixed;
+  bottom: 0;
+  width: 100%; */
+}
+
+.nav-link active,
+.nav-link {
+  color: #304e52;
+}
+.nav-link active,
+.nav-link:hover {
+  color: #f2a154;
+}
+.btnadmin {
+  background-color: #f2a154;
+  color: white;
+  border-radius: 40px;
+  stroke: none;
+  margin: 20px 0px 40px 140px;
+  padding: 0px 20px 0px 20px;
+}
+.btnadmin:hover {
+  background-color: #304e52;
+  color: white;
+  border-radius: 40px;
+  stroke: none;
+}
+.cardAdmin {
+  align-items: center;
+  width: 300px;
+  height: 230px;
+  border-radius: 50px;
+  margin: 0px 50px 100px 100px;
+}
+.cardstock {
+  border-radius: 50px;
+  align-items: center;
+  margin: 10px 20px 0px 10px;
+}
+.cardstock2 {
+  align-items: center;
+  width: 500px;
+  /* height: 350px; */
+  border-radius: 50px;
+  margin: 10px 20px 0px 10px;
+}
+h3 {
+  margin: 20px;
+  padding: 20px 0px 5px 20px;
+}
+input,
+textarea {
+  border-radius: 30px;
+  padding: 10px 15px 10px 15px;
+  margin: 5px;
+  width: 300px;
+  border-width: 1px;
+  border-color: #304e52;
+}
+hr.rounded {
+  /* divider */
+  border-top: 6px solid #f2a154;
+  border-radius: 5px;
+}
+/* .container {
+  margin: 50px;
+} */
+.cardstock3 {
+  align-items: center;
+  width: 500px;
+  border-radius: 50px;
+  margin: 20px;
+  padding: 2rem;
+  background-color: white;
+}
+.cardstock4 {
+  align-items: center;
+  width: 500px;
+  border-radius: 50px;
+  margin: 20px;
+  padding: 2rem;
+  background-color: white;
+}
+img,
+.card-img-top {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+select {
+  margin: "20px 0px 0px 10px";
+  padding: "5px";
+  border-radius: "20px";
+}
+.cardadmin {
+  margin: 0px 0px 0px 0px;
+  padding: 30px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50px;
+}
+.cardresult {
+  width: 20rem;
+  margin: 3rem;
+  background-color: white;
+  border-radius: 50px;
+  margin: 20px;
+}
+p {
+  color: #304e52;
+}
+logoo:hover {
+  color: #f2a154;
+}
+navhow:hover {
+  color: #f2a154;
+}
+navlogout:hover {
+  color: rgb(217, 83, 79);
+  /* colour for delete */
+}
+
+.btnusersearch {
+  font-size: 12px;
+}

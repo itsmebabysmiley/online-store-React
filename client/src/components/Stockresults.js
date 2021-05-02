@@ -2,37 +2,50 @@ import React from 'react'
 import { useState, useEffect } from "react";
 import Axios from 'axios'
 import Navbar from './Navbar'
-import { Redirect } from "react-router-dom";
+import { Redirect,useLocation } from "react-router-dom";
 function Stockresults() {
   const [productList, setProductList] = useState([]);
   const [newPrice, setNewPrice] = useState(0);
-  const [statusLogin, setstatusLogin] = useState(false);
-
+  const [statusLogin, setstatusLogin] = useState(true);
+  const search = useLocation().search;
     useEffect(() => {
+        //get the token from local storage and call API to check token is valid or not.
         const token = localStorage.getItem("token");
-        // console.log(token);
-        Axios.post("http://localhost:3001/isUserAuth",{token : token}).then((res) => {
-        //   console.log(res.data.status);
-        if(res.data.status === false){
-            localStorage.removeItem('token');
-            setstatusLogin(true)
-        }  
-        });
 
-        var apiURL = localStorage.getItem("productAPI");
-        localStorage.removeItem("productAPI");
-        console.log("ok");
-        if (apiURL) {
-        Axios.get(apiURL).then((res) => {
-            console.log(res.data.data);
-            setProductList(res.data.data);
-        });
+        const asyncCallback = async () =>{
+            const data = await Axios.post("http://localhost:3001/isUserAuth",{token : token})
+            setstatusLogin(data.data.status);
         }
-    });
+        asyncCallback()
+        if(!statusLogin){
+            return <Redirect to={'/'}/>
+        }
+        if(statusLogin == true){
+            //get query parameter from url and then call API to get the data.
+            const id = new URLSearchParams(search).get('id');
+            const name = new URLSearchParams(search).get('name');
+            const type = new URLSearchParams(search).get('type');
+            const sortByPrice = new URLSearchParams(search).get('sortByPrice');
+            console.log(id,name,type,sortByPrice);
+            // var apiURL = localStorage.getItem("productAPI");
+            var apiURL = '';
+            if(!id){
+                apiURL = `http://localhost:3001/results/${name}/${sortByPrice}/${type}`;
+            }else{
+                apiURL = `http://localhost:3001/results/${id}`
+            }
+            
+            localStorage.removeItem("productAPI");
+            if (apiURL != '') {
+                Axios.get(apiURL).then((res) => {
+                    console.log(res.data.data);
+                    setProductList(res.data.data);
+                });
+            }
+        }
+    },[]);
+    //if token suck, redirect to login page.
 
-    if(statusLogin){
-        return <Redirect to={'/'}/>
-    }
 
     const updateProduct = (id) => {
         // console.log(newPrice,id);
@@ -73,33 +86,25 @@ function Stockresults() {
     };
     const result = () => {
         return (
-        <div>
+        <div className="d-flex flex-wrap justify-content-center" >
             {productList.map((val, key) => {
-            return (
-                <div>
-                <div
-                    style={{ border: "1px solid", margin: "10px", padding: "10px" }}
-                >
-                    <h3>ID: {val.pId}</h3>
-                    <p>Name: {val.pName}</p>
-                    <p>Price: {val.price}</p>
-                    <p>detail: {val.detail}</p>
-                    <p>Type: {val.type}</p>
-                    <p>Image:</p>
-                    <div className="container">
-                    <img
-                        src={val.Image}
-                        alt="..."
-                        width="150px"
-                        height="150px"
-                    ></img>
+                return (
+                    <div className="card" style={{width:"20rem", margin:"3rem", borderRadius: "40px"}}>
+                        <img src={val.Image} class="card-img-top" alt="..."></img>
+                        <div className="card-body">
+                            <h5 className="card-title">ID: {val.pId}</h5>
+                            <h5 className="card-title">{val.pName}</h5>
+                            <p className="card-text d-flex"><h5>Detail: &nbsp;</h5> {val.detail} </p>
+                            <p className="card-text d-flex"><h5>Type: &nbsp;</h5> {val.type}</p>
+                            <p className="card-text d-flex"><h5>Price: &nbsp;</h5> {val.price} ฿</p>
+                        </div>
+                        <div className="card-body">
+                            <input type="number" placeholder="new price ฿" style={{width:"15rem"}} onChange={(e)=>{setNewPrice(e.target.value)}}/>
+                            <button className="btn" onClick={()=>{updateProduct(val.pId)}}>update</button> &nbsp;
+                            <button className="btn" style={{backgroundColor: "rgb(217, 83, 79)"}} onClick={()=>{deleteProduct(val.pId)}}>Delete</button><br/>
+                        </div>
                     </div>
-                    <button onClick={()=>{deleteProduct(val.pId)}}>Delete</button><br/>
-                            <input type="number" placeholder=".... Baht" onChange={(e)=>{setNewPrice(e.target.value)}}/>
-                            <button onClick={()=>{updateProduct(val.pId)}}>update</button>
-                </div>
-                </div>
-            );
+                );
             })}
         </div>
         );

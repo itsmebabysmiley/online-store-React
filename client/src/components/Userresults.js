@@ -2,37 +2,47 @@ import React from 'react'
 import { useState, useEffect } from "react";
 import Axios from 'axios'
 import Navbar from './Navbar'
-import { Redirect } from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 function Userresults() {
     //authorized user is login or not.
-    const [statusLogin, setstatusLogin] = useState(false);
+    const [statusLogin, setstatusLogin] = useState(true);
     const [userList, setuserList] = useState([]);
     const [newRole, setnewRole] = useState("");
+    const search = useLocation().search;
     useEffect(() => {
         const token = localStorage.getItem("token");
-        // console.log(token);
-        Axios.post("http://localhost:3001/isUserAuth",{token : token}).then((res) => {
-        //   console.log(res.data.status);
-          if(res.data.status === false){
-            localStorage.removeItem('token');
-            setstatusLogin(true)
-          }  
-        });
-        var apiURL = localStorage.getItem("userAPI");
-        localStorage.removeItem("userAPI");
-        console.log(apiURL);
-        if (apiURL) {
-            Axios.get(apiURL).then((res) => {
-                console.log(res.data.data);
-                setuserList(res.data.data);
-            });
+        //authorized user is login or not.
+        const asyncCallback = async () =>{
+            const data = await Axios.post("http://localhost:3001/isUserAuth",{token : token})
+            setstatusLogin(data.data.status);
+        }
+        asyncCallback()
+        //if not login redirect to login page.
+        if(!statusLogin){
+            return <Redirect to={'/'}/>
+        }
+
+        if(statusLogin == true){
+          const name = new URLSearchParams(search).get('search');
+          const option = new URLSearchParams(search).get('option');
+          let apiURL = '';
+          if(name === "all"){
+            apiURL = "http://localhost:3001/searchuserall";
+          }else{
+            apiURL = `http://localhost:3001/searchuser/${name}/${option}`;
+          }
+          console.log(apiURL);
+          if (apiURL) {
+              Axios.get(apiURL).then((res) => {
+                  //console.log(res.data.data);
+                  setuserList(res.data.data);
+              });
+          }
         }
         
-    });
+        
+    },[]);
     //not login then redirect to login page.
-    if(statusLogin){
-        return <Redirect to={'/'}/>
-    }
     const updateRole = (uname) => {
         console.log(uname, newRole);
         Axios.put("http://localhost:3001/updateuser", {
@@ -76,48 +86,81 @@ function Userresults() {
 
     const results = () => {
         return (
-          <div>
+          <div className="container" style={{
+            padding: "2rem",
+            borderRadius: "40px",
+            backgroundColor: "white",
+          }}>
+            <table className="table table-light">
+              <thead>
+                <tr>
+                  <th scope="col">Username</th>
+                  <th scope="col">First name</th>
+                  <th scope="col">Last name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Age</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Update</th>
+                  <th scope="col">Delete</th>
+                </tr>
+              </thead>
             {userList.map((val, key) => {
               return (
-                <div>
-                  <div
-                    style={{ border: "1px solid", margin: "10px", padding: "10px" }}
-                  >
-                    <p>Name: {val.ufname}</p>
-                    <p>Lastname: {val.ulname}</p>
-                    <p>Username: {val.username}</p>
-                    <p>email: {val.email}</p>
-                    <p>age: {val.age}</p>
-                    <p>address: {val.address}</p>
-                    <p>role: {val.role}</p>
-                    <select
-                      onChange={(e) => {
-                        setnewRole(e.target.value);
-                      }}
-                    >
-                     <option value="" disabled selected>-- role --</option>
-                      <option value="admin">admin</option>
-                      <option value="user">user</option>
-                    </select>
-                    <button
-                      onClick={() => {
-                        updateRole(val.username);
-                      }}
-                    >
-                      update
-                    </button>
-                    <br />
-                    <button
-                      onClick={() => {
-                        deleteUser(val.username);
-                      }}
-                    >
-                      delete
-                    </button>
-                  </div>
-                </div>
+                <tbody>
+                  <tr>
+                    <td>{val.username}</td>
+                    <td>{val.ufname}</td>
+                    <td>{val.ulname}</td>
+                    <td>{val.email}</td>
+                    <td>{val.age}</td>
+                    <td>{val.address}</td>
+                    <td>
+                      {val.role === "admin"? <button className="btn btn-primary btn-sm" disabled>Admin</button>:<button className="btn btn-secondary btn-sm" disabled>User</button>}
+                    </td>
+                    <td>
+                      <div className="d-flex">
+                        <select  className="form-select form-select-sm"
+                          onChange={(e) => {
+                            setnewRole(e.target.value);
+                          }}
+                          style={{
+                            margin: "0px 10px 0px 0px",
+                            padding: "5px",
+                            borderRadius: "20px",
+                            width:"100px"
+                          }}
+                        >
+                        <option value="" disabled selected>-- role --</option>
+                          <option value="admin">admin</option>
+                          <option value="user">user</option>
+                        </select>
+                        <button className="btn btn-sm"
+                          onClick={() => {
+                            updateRole(val.username);
+                          }}
+                        >
+                          update
+                        </button>
+                      </div>
+                    </td>
+                    <td>
+                      <button className="btn btn-danger btn-sm"
+                        onClick={() => {
+                          deleteUser(val.username);
+                        }}
+                        style={{
+                          backgroundColor: "rgb(217, 83, 79)"
+                        }}
+                      >
+                        delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
               );
             })}
+            </table>
           </div>
         );
       };
@@ -126,7 +169,9 @@ function Userresults() {
         <div>
             <Navbar/>
             <h1 style={{ textAlign: "center" }}>This is user results</h1>
+            <div className="container">
             {results()}
+            </div>
         </div>
     )
 }

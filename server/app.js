@@ -104,7 +104,7 @@ router.post("/postlogin", (req, res) => {
             const token = jwt.sign(
               { username: username, loginStatus: true, role: role },
               "SECRETKEY",
-              { expiresIn: 60 * 1 }
+              { expiresIn: '1h' }
             );
             res.setHeader("Set-Cookie", "token=" + token);
             return res.send({
@@ -154,7 +154,7 @@ router.post("/postlogin2", (req, res) => {
             const token = jwt.sign(
               { username: username, loginStatus: true, role: role },
               "SECRETKEY",
-              { expiresIn: 60 * 1 }
+              { expiresIn: '1h' }
             );
             res.setHeader("Set-Cookie", "token=" + token);
             res.redirect("profile");
@@ -199,7 +199,7 @@ router.post("/postregister", (req, res) => {
       const token = jwt.sign(
         { username: new_user.username, loginStatus: true, role: new_user.role },
         "SECRETKEY",
-        { expiresIn: 60 * 1 }
+        { expiresIn: "1h" }
       );
       res.setHeader("Set-Cookie", "token=" + token);
       return res.send({
@@ -394,11 +394,12 @@ router.post("/insertproducts", (req, res) => {
     products,
     (error, results, fields) => {
       if (error) {
+        // throw error
         return res.send({ err: true, msg: "Error occur" });
       }
       return res.send({
         err: false,
-        msg: `product ${products.pName} has been added`,
+        msg: `product "${products.pName}" has been added`,
       });
     }
   );
@@ -563,7 +564,7 @@ router.post("/insertuser", (req, res) => {
         console.log(error);
         if (error.errno == 1062) {
           return res.send({
-            err: false,
+            err: true,
             msg: "This username is already in used",
           });
         }
